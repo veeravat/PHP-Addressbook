@@ -1,0 +1,72 @@
+div.female {
+    height: 40px;
+    content: url(../images/female.png);
+}
+
+div.male {
+    height: 40px;
+    content: url(../images/male.png);
+}
+
+.scrollable {
+    max-height: 600px;
+    height: 600px;
+    overflow-y: scroll;
+}
+
+.scrollable2 {
+    max-height: 170px;
+    height: 170px;
+    overflow-y: scroll;
+}
+
+div.show-info {
+    height: 400px;
+    width: 400px;
+}
+
+.table-striped>tr:nth-child(odd) {
+    background-color: red;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #e6f0ff;
+}
+
+.centered {
+    width: 900px;
+    height: 760px;
+    position: relative;
+    left: 50%;
+    margin: 40px 0 0 -450px;
+    background-color: #e6ffff;
+    float: left;
+}
+
+.shadow {
+    position: relative;
+    width: 900px;
+    height: 760px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    float: left;
+    margin-left: -450px;
+}
+
+.shadow:before {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    left: 1px;
+    right: 1px;
+    top: 1px;
+    bottom: 1px;
+    -moz-box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+body {
+    background-image: url("../images/bg.png");
+    background-repeat: repeat;
+}
