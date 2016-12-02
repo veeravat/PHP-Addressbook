@@ -1,18 +1,3 @@
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : Azure
-Source Server Version : 50545
-Source Host           : ap-cdbr-azure-southeast-b.cloudapp.net:3306
-Source Database       : acsm_e92fbc56b87b79e
-
-Target Server Type    : MYSQL
-Target Server Version : 50545
-File Encoding         : 65001
-
-Date: 2016-11-22 01:12:29
-*/
-
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
