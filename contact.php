@@ -5,7 +5,7 @@ define("access",true);
 require_once('config.php');
 $conn = connect();
 $id = $_GET['id'];
-$sql = "SELECT * FROM contact WHERE CID = $id";
+$sql = "SELECT * FROM addr_contact WHERE CID = $id";
 $query = $conn->query($sql);
 $result = $query->fetch_array();
 $conn->close();

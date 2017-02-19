@@ -1,17 +1,36 @@
 <?PHP
 defined("access") or die(header('HTTP/1.0 403 Forbidden'));
 
-$connection->Hostname = '[Enter your Host name here]';
-$connection->Username = '[Enter your Usermane here]';
-$connection->Password = '[Enter your Password here]';
-$connection->Database = '[Enter your DB  name here]';
+
+Global $connection;
+// find environment
+if($connect = getenv('MYSQLCONNSTR_mysqlConnection') != NULL){
+    $conn_array = array();
+    $parts = explode(";", $connect);
+    foreach($parts as $part){
+        $temp = explode("=", $part);
+        $conn_array[$temp[0]] = $temp[1];
+    }
+    $connection['Hostname'] = $conn_array['Data Source'];
+    $connection['Username'] = $conn_array['User Id'];
+    $connection['Password'] = $conn_array['Password'];
+    $connection['Database'] = $conn_array['Database'];
+}
+else{
+    $connection['Hostname'] = '[Enter your Host name here]';
+    $connection['Username'] = '[Enter your Usermane  here]';
+    $connection['Password'] = '[Enter your Password  here]';
+    $connection['Database'] = '[Enter your DB name here]';
+}
+
 
 function connect()
 {
-    $conn = new mysqli($connection->Hostname,
-                    $connection->Username,
-                    $connection->Password,
-                    $connection->Database);
+    global $connection;
+    $conn = new mysqli($connection['Hostname'],
+                    $connection['Username'],
+                    $connection['Password'],
+                    $connection['Database']);
 
     if ($conn->connect_errno) {
 		die($conn->connect_error) ;
@@ -22,10 +41,11 @@ function connect()
 function reconnect($conn)
 {  
     $conn->close();
-    $conn = new mysqli($connection->Hostname,
-                    $connection->Username,
-                    $connection->Password,
-                    $connection->Database);
+    global $connection;
+    $conn = new mysqli($connection['Hostname'],
+                    $connection['Username'],
+                    $connection['Password'],
+                    $connection['Database']);
 
     if ($conn->connect_errno) {
 		die($conn->connect_error) ;
@@ -36,8 +56,8 @@ function reconnect($conn)
 function insert_sql($data,$phone)
 {
     $conn = connect();
-    $cid = getlatestID($conn,'contact','CID')+1;
-    $sql = "INSERT INTO contact (CID,fname, lname, organization, email, note, sex) 
+    $cid = getlatestID($conn,'addr_contact','CID')+1;
+    $sql = "INSERT INTO addr_contact (CID,fname, lname, organization, email, note, sex) 
     VALUES ('".$cid."','".$conn->real_escape_string($data[0])."','".$conn->real_escape_string($data[1])."','".$conn->real_escape_string($data[2])."','".$conn->real_escape_string($data[3])."','".$conn->real_escape_string($data[4])."','".$conn->real_escape_string($data[5])."')";
     $result = $conn->query($sql) or die("Query Failed! SQL: $sql - Error: ".$conn->error);
     if($result)
@@ -46,8 +66,8 @@ function insert_sql($data,$phone)
         $num = count($phone);
         for($i=0;$i<$num;$i++)
         {
-            $pid = getlatestID($conn,'phone','PID')+1;
-            $sql = "INSERT INTO phone (PID,CID, tel_number) 
+            $pid = getlatestID($conn,'addr_phone','PID')+1;
+            $sql = "INSERT INTO addr_phone (PID,CID, tel_number) 
             VALUES ('".$pid."','".$cid."','".$phone[$i]."')";
             $result = $conn->query($sql) or die("Query Failed! SQL: $sql - Error: ".$conn->error);
         }
@@ -59,7 +79,7 @@ function insert_sql($data,$phone)
 function update_sql($data,$phone,$pid,$id)
 {
     $conn = connect();
-    $sql = "UPDATE  contact SET 
+    $sql = "UPDATE  addr_contact SET 
             fname = '".$conn->real_escape_string($data[0])."', lname = '".$conn->real_escape_string($data[1])."', 
             organization = '".$conn->real_escape_string($data[2])."', email = '".$conn->real_escape_string($data[3])."', 
             note = '".$conn->real_escape_string($data[4])."'  
@@ -71,7 +91,7 @@ function update_sql($data,$phone,$pid,$id)
         $num = count($phone);
         for($i=0;$i<$num;$i++)
         {
-            $sql = "UPDATE  phone SET tel_number = '".$phone[$i]."'WHERE PID = '".$pid[$i]."' ";
+            $sql = "UPDATE  addr_phone SET tel_number = '".$phone[$i]."'WHERE PID = '".$pid[$i]."' ";
             $result = $conn->query($sql) or die("Query Failed! SQL: $sql - Error: ".$conn->error);
         }
     }
@@ -81,12 +101,12 @@ function update_sql($data,$phone,$pid,$id)
 function delete_sql($id)
 {
     $conn = connect();
-    $sql = "DELETE  FROM contact 
+    $sql = "DELETE  FROM addr_contact 
                     WHERE CID = '".$conn->real_escape_string($id)."' ";
     $result = $conn->query($sql) or die("Query Failed! SQL: $sql - Error: ".$conn->error);
     if($result)
     {
-        $sql = "DELETE  FROM phone 
+        $sql = "DELETE  FROM addr_phone 
                         WHERE CID = '".$conn->real_escape_string($id)."' ";
         $result = $conn->query($sql) or die("Query Failed! SQL: $sql - Error: ".$conn->error);
     }
@@ -129,7 +149,7 @@ function printPhone($id)
 {
     $i=0;
     $conn = connect();
-    $sql = "SELECT * FROM phone WHERE CID = $id";
+    $sql = "SELECT * FROM addr_phone WHERE CID = $id";
     $query = $conn->query($sql);
     while($result = $query->fetch_array())  
         echo '<span class="glyphicon glyphicon-phone res_phone['.$i++.']" aria-hidden="true"></span> : '.$result['tel_number'].'  <br>'; 
@@ -139,7 +159,7 @@ function printPhoneEdit($id)
 {
     $i=0;
     $conn = connect();
-    $sql = "SELECT * FROM phone WHERE CID = $id";
+    $sql = "SELECT * FROM addr_phone WHERE CID = $id";
     $query = $conn->query($sql);
     while($result = $query->fetch_array()){  
         echo'<input type="tel" maxlength="10" name="ephone[]" class="form-control" value="'.$result['tel_number'].'" required="required" placeholder="เบอร์โทรศัพท์">';   

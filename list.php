@@ -11,7 +11,7 @@ $conn = connect();
 if(isset($_GET['q']))
 {
     $search = $conn->real_escape_string($_GET['q']);
-    $sql = "SELECT * FROM contact  WHERE (
+    $sql = "SELECT * FROM addr_contact  WHERE (
             fname LIKE '%$search%' OR
             lname LIKE '%$search%' OR
             organization LIKE '%$search%' OR
@@ -19,7 +19,7 @@ if(isset($_GET['q']))
             )
     ";
 }
-else {$sql = "SELECT * FROM contact";}
+else {$sql = "SELECT * FROM addr_contact";}
 $query = $conn->query($sql);
 while($result = $query->fetch_array())
     show_list($result);

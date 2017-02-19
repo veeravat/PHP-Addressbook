@@ -201,6 +201,7 @@ $(document).ready(function() {
         </form>
       </div>
       <div class="modal-footer">
+      <div class="Output"></div
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary form-submit">เพิ่มข้อมูล</button>
       </div>
