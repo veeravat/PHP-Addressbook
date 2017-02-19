@@ -4,19 +4,18 @@ defined("access") or die(header('HTTP/1.0 403 Forbidden'));
 
 Global $connection;
 // find environment
-if($connect = getenv('MYSQLCONNSTR_mysqlConnection') != NULL){
-    $conn_array = array();
-    $parts = explode(";", $connect);
-    foreach($parts as $part){
-        $temp = explode("=", $part);
-        $conn_array[$temp[0]] = $temp[1];
+
+foreach ($_SERVER as $key => $value) {
+    if (strpos($key, "MYSQLCONNSTR_") !== 0) {
+        continue;
     }
-    $connection['Hostname'] = $conn_array['Data Source'];
-    $connection['Username'] = $conn_array['User Id'];
-    $connection['Password'] = $conn_array['Password'];
-    $connection['Database'] = $conn_array['Database'];
+    $connection['Hostname'] = preg_replace("/^.*Data Source=(.+?);.*$/", "\\1", $value);
+    $connection['Username'] = preg_replace("/^.*User Id=(.+?);.*$/", "\\1", $value);
+    $connection['Password'] = preg_replace("/^.*Password=(.+?)$/", "\\1", $value);
+    $connection['Database'] = preg_replace("/^.*Database=(.+?);.*$/", "\\1", $value);
+    break;
 }
-else{
+if($connection['Hostname'] == NULL){
     $connection['Hostname'] = '[Enter your Host name here]';
     $connection['Username'] = '[Enter your Usermane  here]';
     $connection['Password'] = '[Enter your Password  here]';
