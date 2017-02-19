@@ -6,7 +6,7 @@ require_once('config.php');
 <html>
 <head>
 <meta charset="utf-8">
-<title>Address Book</title>
+<title>MAV</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Latest compiled and minified CSS & JS -->
@@ -75,7 +75,7 @@ $(document).ready(function() {
 <div class="shadow centered">
 
 <div class="alert alert-info" style="text-align: center">
-  <strong>Address Book</strong> 
+  <strong>MSV Academy</strong> 
 </div>
 <br>
 <table border="0" class="table table-responsive table-bordered">
