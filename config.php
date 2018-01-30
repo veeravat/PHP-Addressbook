@@ -2,6 +2,7 @@
 defined("access") or die(header('HTTP/1.0 403 Forbidden'));
 
 
+
 Global $connection;
 // find environment
 
@@ -33,7 +34,29 @@ function connect()
 
     if ($conn->connect_errno) {
 		die($conn->connect_error) ;
-	}
+    }
+    $check_db = 'show tables like "addr_contact"';
+    $result = $conn->query($check_db);
+    if(!$result){
+        $sql = "CREATE TABLE `addr_phone` (
+            `PID` int(5) NOT NULL,
+            `CID` int(4) DEFAULT NULL,
+            `tel_number` varchar(10) DEFAULT NULL,
+            PRIMARY KEY (`PID`)
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        $conn->query($sql);
+        $sql = "CREATE TABLE `addr_contact` (
+            `CID` int(4) NOT NULL,
+            `fname` varchar(40) DEFAULT NULL,
+            `lname` varchar(40) DEFAULT NULL,
+            `organization` varchar(40) DEFAULT NULL,
+            `email` varchar(40) DEFAULT NULL,
+            `note` text,
+            `sex` varchar(7) DEFAULT NULL,
+            PRIMARY KEY (`CID`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+        $conn->query($sql);
+    }
     return $conn;
 }
 
